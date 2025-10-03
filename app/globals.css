@@ -10,7 +10,7 @@
   --color-foreground: var(--foreground);
   
   /* Font families */
-  --font-heading-primary: var(--font-albert-sans);
+  --font-heading-primary: var(--font-helvetica-now-display);
   --font-heading-secondary: var(--font-helvetica-now-display);
   --font-heading-tertiary: var(--font-albra);
   --font-body: var(--font-roboto);
@@ -47,4 +47,17 @@ body {
 
 .font-body {
   font-family: var(--font-body), system-ui, sans-serif;
+}
+
+/* Additional font utility classes for direct access */
+.font-helvetica-now {
+  font-family: var(--font-helvetica-now-display), system-ui, sans-serif;
+}
+
+.font-albra {
+  font-family: var(--font-albra), system-ui, sans-serif;
+}
+
+.font-roboto {
+  font-family: var(--font-roboto), system-ui, sans-serif;
 }

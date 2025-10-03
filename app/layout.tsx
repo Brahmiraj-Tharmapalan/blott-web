@@ -1,15 +1,9 @@
 import type { Metadata } from "next";
-import { Albert_Sans, Roboto } from "next/font/google";
+import { Roboto } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 
-// Google Fonts
-const albertSans = Albert_Sans({
-  variable: "--font-albert-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
-
+// Body font
 const roboto = Roboto({
   variable: "--font-roboto",
   subsets: ["latin"],
@@ -17,7 +11,7 @@ const roboto = Roboto({
   display: "swap",
 });
 
-// Local fonts (for Helvetica Now Display and Albra)
+// Local fonts
 const helveticaNowDisplay = localFont({
   src: [
     {
@@ -75,7 +69,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${albertSans.variable} ${roboto.variable} ${helveticaNowDisplay.variable} ${albra.variable} antialiased`}
+        className={`${roboto.variable} ${helveticaNowDisplay.variable} ${albra.variable} antialiased`}
       >
         {children}
       </body>
