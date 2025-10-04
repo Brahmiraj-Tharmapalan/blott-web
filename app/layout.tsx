@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
+import Header from "@/components/Header";
 
 // Body font
 const roboto = Roboto({
@@ -71,6 +72,7 @@ export default function RootLayout({
       <body
         className={`${roboto.variable} ${helveticaNowDisplay.variable} ${albra.variable} antialiased`}
       >
+        <Header/>
         {children}
       </body>
     </html>
