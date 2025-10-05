@@ -1,30 +1,14 @@
-import MainNewsCard from '@/components/MainNewsCard';
-import NewsCard from '@/components/NewsCard';
-import { fetchNews, NewsResponse } from '@/data/news';
-
-// Fetch initial news data on the server
-async function getInitialNews(): Promise<NewsResponse> {
-  try {
-    return await fetchNews(7, 0);
-  } catch (error) {
-    console.error('Error fetching initial news:', error);
-    // Return empty data on error
-    return {
-      articles: [],
-      total: 0,
-      hasMore: false,
-    };
-  }
-}
+import MainNewsCard from "@/components/MainNewsCard";
+import NewsCard from "@/components/NewsCard";
+import { getInitialNews } from "@/data/api/news";
+import LoadMoreNews from "@/components/LoadMoreNews";
 
 export default async function page() {
-  // Fetch initial news data on the server
   const initialNews = await getInitialNews();
   const articles = initialNews.articles;
 
   return (
     <div className="container mx-auto px-4 sm:px-10">
-      {/* Header Section */}
       <div className="flex justify-start items-start w-full mb-8 sm:mb-12">
         <div className="flex flex-col text-white w-2/3">
           <div className="font-helvetica-now uppercase text-[calc(1.25rem+2vw)]/8">
@@ -34,7 +18,7 @@ export default async function page() {
             <div className="font-albra uppercase leading-none text-[calc(0.9rem+2.5vw)]">
               FROM
             </div>
-            <div className="flex-1 h-px bg-white/50 hidden sm:block"/>
+            <div className="flex-1 h-px bg-white/50 hidden sm:block" />
             <div className="font-helvetica-now uppercase tracking-wide leading-none flex items-center gap-2 whitespace-nowrap">
               <span className="text-[calc(0.95rem+2.5vw)]">THE WORLD</span>
               <sup className="align-super text-[calc(1rem+2vw)]">®</sup>
@@ -43,9 +27,8 @@ export default async function page() {
         </div>
       </div>
 
-      {/* News Cards Section */}
       <div className="w-full">
-        {/* Mobile Layout - Single Column */}
+        {/* Mobile Layout */}
         <div className="block sm:hidden space-y-4">
           {articles.length > 0 && (
             <MainNewsCard
@@ -67,11 +50,9 @@ export default async function page() {
           ))}
         </div>
 
-        {/* Desktop Layout - Grid with MainNewsCard and NewsCards */}
+        {/* Desktop Layout */}
         <div className="hidden sm:block">
-          {/* First Row - MainNewsCard + 2 NewsCards */}
           <div className="grid grid-cols-4 gap-4 lg:gap-6 mb-4 lg:mb-6">
-            {/* Main News Card - First Article (spans 2 columns) */}
             {articles.length > 0 && (
               <div className="col-span-2">
                 <MainNewsCard
@@ -83,7 +64,6 @@ export default async function page() {
               </div>
             )}
 
-            {/* Second Article - Small Card (1 column) */}
             {articles.length > 1 && (
               <div className="col-span-1">
                 <NewsCard
@@ -96,7 +76,6 @@ export default async function page() {
               </div>
             )}
 
-            {/* Third Article - Small Card (1 column) */}
             {articles.length > 2 && (
               <div className="col-span-1">
                 <NewsCard
@@ -110,7 +89,6 @@ export default async function page() {
             )}
           </div>
 
-          {/* Second Row - 4 NewsCards */}
           <div className="grid grid-cols-4 gap-4 lg:gap-6">
             {articles.slice(3, 7).map((article) => (
               <div key={article.id} className="col-span-1">
@@ -126,6 +104,8 @@ export default async function page() {
           </div>
         </div>
       </div>
+      {/* Load more client section */}
+      <LoadMoreNews initialOffset={articles.length} pageSize={4} />
     </div>
   );
 }

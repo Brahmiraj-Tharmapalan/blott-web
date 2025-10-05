@@ -1,5 +1,6 @@
-const FINNHUB_API_URL = 'https://finnhub.io/api/v1/news';
-const FINNHUB_TOKEN = 'crals9pr01qhk4bqotb0crals9pr01qhk4bqotbg';
+ import 'server-only';
+ const FINNHUB_API_URL = 'https://finnhub.io/api/v1/news';
+ const FINNHUB_TOKEN = process.env.FINNHUB_TOKEN;
 
 interface FinnhubNewsItem {
   category: string;
@@ -31,14 +32,32 @@ export interface NewsResponse {
   hasMore: boolean;
 }
 
-export async function fetchNews(limit: number = 10, offset: number = 0): Promise<NewsResponse> {
+// Allow callers to override caching behavior (e.g., cache: 'no-store')
+type FetchOptions = RequestInit & { next?: { revalidate?: number; tags?: string[] } };
+
+export async function fetchNews(
+  limit: number = 10,
+  offset: number = 0,
+  fetchOptions?: FetchOptions
+): Promise<NewsResponse> {
   try {
-    const response = await fetch(
-      `${FINNHUB_API_URL}?category=general&token=${FINNHUB_TOKEN}`,
-      {
-        next: { revalidate: 300 },
-      }
-    );
+    if (!FINNHUB_TOKEN) {
+      throw new Error('Missing FINNHUB_TOKEN environment variable');
+    }
+
+    const url = `${FINNHUB_API_URL}?category=general&token=${FINNHUB_TOKEN}`;
+
+    const defaultOptions: FetchOptions = { next: { revalidate: 300 } };
+    const mergedOptions: FetchOptions = {
+      ...defaultOptions,
+      ...fetchOptions,
+      next: {
+        ...defaultOptions.next,
+        ...(fetchOptions?.next ?? {}),
+      },
+    };
+
+    const response = await fetch(url, mergedOptions);
 
     if (!response.ok) {
       throw new Error(`Finnhub API error: ${response.status}`);
