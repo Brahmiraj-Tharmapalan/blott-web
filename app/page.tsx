@@ -45,7 +45,6 @@ export default async function page() {
               title={article.title}
               imageUrl={article.imageUrl}
               imageAlt={article.imageAlt}
-              summary={article.summary}
             />
           ))}
         </div>
@@ -71,7 +70,6 @@ export default async function page() {
                   title={articles[1].title}
                   imageUrl={articles[1].imageUrl}
                   imageAlt={articles[1].imageAlt}
-                  summary={articles[1].summary}
                 />
               </div>
             )}
@@ -83,7 +81,6 @@ export default async function page() {
                   title={articles[2].title}
                   imageUrl={articles[2].imageUrl}
                   imageAlt={articles[2].imageAlt}
-                  summary={articles[2].summary}
                 />
               </div>
             )}
@@ -97,15 +94,14 @@ export default async function page() {
                   title={article.title}
                   imageUrl={article.imageUrl}
                   imageAlt={article.imageAlt}
-                  summary={article.summary}
                 />
               </div>
             ))}
           </div>
         </div>
       </div>
-      {/* Load more client section */}
-      <LoadMoreNews initialOffset={articles.length} pageSize={4} />
+      {/* Load more */}
+      <LoadMoreNews initialOffset={articles.length} initialHasMore={initialNews.hasMore} pageSize={4} />
     </div>
   );
 }

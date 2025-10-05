@@ -2,8 +2,8 @@
 
 import { useState, useTransition } from "react";
 import NewsCard from "./NewsCard";
+import { loadMoreNews } from "@/app/actions/news";
 
-// Keep a client-safe type (do not import server-only modules)
 export type ClientNewsArticle = {
   id: string;
   title: string;
@@ -20,42 +20,56 @@ export type ClientNewsResponse = {
 };
 
 interface LoadMoreNewsProps {
-  initialOffset: number; // how many were rendered on the server already
-  initialHasMore?: boolean; // whether there are more after initial SSR
-  pageSize?: number; // how many to fetch per click
+  readonly initialOffset: number;
+  readonly initialHasMore?: boolean;
+  readonly pageSize?: number;
 }
 
-export default function LoadMoreNews({ initialOffset, initialHasMore = true, pageSize = 4 }: LoadMoreNewsProps) {
+function mergeArticles(
+  prev: ClientNewsArticle[],
+  incoming: ClientNewsArticle[],
+): ClientNewsArticle[] {
+  const seen = new Set(prev.map((p) => p.id));
+  const deduped: ClientNewsArticle[] = [];
+  for (const a of incoming) {
+    if (!seen.has(a.id)) deduped.push(a);
+  }
+  return [...prev, ...deduped];
+}
+
+export default function LoadMoreNews({ initialOffset, initialHasMore = true, pageSize = 4 }: Readonly<LoadMoreNewsProps>) {
   const [items, setItems] = useState<ClientNewsArticle[]>([]);
   const [offset, setOffset] = useState(initialOffset);
   const [hasMore, setHasMore] = useState(initialHasMore);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
+  const applyLoadedData = (data: ClientNewsResponse) => {
+    setItems((prev) => mergeArticles(prev, data.articles));
+    setOffset((prev) => prev + pageSize);
+    setHasMore(data.hasMore);
+  };
+
+  const performLoad = async () => {
+    try {
+      setError(null);
+      const data = await loadMoreNews(pageSize, offset);
+      applyLoadedData(data);
+    } catch (e: any) {
+      setError(e?.message ?? "Failed to load more");
+    }
+  };
+
   const loadMore = () => {
     if (!hasMore || isPending) return;
-    startTransition(async () => {
-      try {
-        setError(null);
-        const res = await fetch(`/api/news?limit=${pageSize}&offset=${offset}`, { cache: "no-store" });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data: ClientNewsResponse = await res.json();
-        setItems(prev => [...prev, ...data.articles]);
-        setOffset(prev => prev + pageSize);
-        setHasMore(data.hasMore);
-      } catch (e: any) {
-        setError(e?.message ?? "Failed to load more");
-      }
-    });
+    startTransition(performLoad);
   };
 
   if (!hasMore && items.length === 0) {
     return null;
   }
-
   return (
     <div className="mt-8 sm:mt-12">
-      {/* Newly loaded items grid */}
       {items.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6">
           {items.map((article) => (
@@ -65,19 +79,16 @@ export default function LoadMoreNews({ initialOffset, initialHasMore = true, pag
                 title={article.title}
                 imageUrl={article.imageUrl}
                 imageAlt={article.imageAlt}
-                summary={article.summary}
               />
             </div>
           ))}
         </div>
       )}
 
-      {/* Error state */}
       {error && (
         <div className="text-red-400 text-sm mb-4">{error}</div>
       )}
 
-      {/* Load more button */}
       {hasMore && (
         <div className="flex justify-center py-4">
           <button
@@ -92,3 +103,4 @@ export default function LoadMoreNews({ initialOffset, initialHasMore = true, pag
     </div>
   );
 }
+

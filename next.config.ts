@@ -27,6 +27,49 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      // Common news/image CDNs observed in publisher feeds
+      {
+        protocol: 'https',
+        hostname: 'assets.bwbx.io', // Bloomberg
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.cnn.com', // CNN
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'media.cnn.com', // CNN media
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'static01.nyt.com', // NYTimes
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.insider.com', // Business Insider
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 's.yimg.com', // Yahoo images
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'media.zenfs.com', // Yahoo media
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };

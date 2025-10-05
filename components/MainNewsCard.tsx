@@ -17,7 +17,7 @@ const MainNewsCard: React.FC<MainNewsCardProps> = ({
   imageAlt,
 }) => {
   return (
-    <Link href={`/news/${id}`} className="block">
+    <Link href={`/news/${id}`} className="block" prefetch>
       <div className="relative text-white overflow-hidden group cursor-pointer transition-transform h-[450px]">
         <div className="relative w-full h-full">
           <Image
@@ -25,10 +25,11 @@ const MainNewsCard: React.FC<MainNewsCardProps> = ({
             alt={imageAlt}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
+            placeholder="blur"
+            blurDataURL="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='9' viewBox='0 0 16 9'%3E%3Crect width='16' height='9' fill='%23222222'/%3E%3C/svg%3E"
             sizes="(max-width: 768px) 60vw, (max-width: 800px) 20vw, 30vw"
           />
 
-          {/* Purple gradient overlay with text content */}
           <div className="absolute bottom-0 left-0 right-0 bg-purple-gradient p-6 sm:p-8">
             <h2 className="font-helvetica-now font-bold text-white text-[calc(0.75rem+1vw)]">
               {title}

@@ -8,7 +8,6 @@ interface NewsCardProps {
   title: string;
   imageUrl: string;
   imageAlt: string;
-  summary?: string;
 }
 
 const NewsCard: React.FC<NewsCardProps> = ({
@@ -16,10 +15,9 @@ const NewsCard: React.FC<NewsCardProps> = ({
   title,
   imageUrl,
   imageAlt,
-  summary,
 }) => {
   return (
-    <Link href={`/news/${id}`} className="group block">
+    <Link href={`/news/${id}`} className="group block" prefetch>
       <div className="group">
         <div className="relative w-full aspect-video overflow-hidden">
           <Image
@@ -27,6 +25,8 @@ const NewsCard: React.FC<NewsCardProps> = ({
             alt={imageAlt}
             fill
             className="transition-transform duration-500 group-hover:scale-105"
+            placeholder="blur"
+            blurDataURL="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='9' viewBox='0 0 16 9'%3E%3Crect width='16' height='9' fill='%23222222'/%3E%3C/svg%3E"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>

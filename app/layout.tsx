@@ -4,7 +4,6 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Header from "@/components/Header";
 
-// Body font
 const roboto = Roboto({
   variable: "--font-roboto",
   subsets: ["latin"],
@@ -12,7 +11,6 @@ const roboto = Roboto({
   display: "swap",
 });
 
-// Local fonts
 const helveticaNowDisplay = localFont({
   src: [
     {

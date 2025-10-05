@@ -32,7 +32,6 @@ export interface NewsResponse {
   hasMore: boolean;
 }
 
-// Allow callers to override caching behavior (e.g., cache: 'no-store')
 type FetchOptions = RequestInit & { next?: { revalidate?: number; tags?: string[] } };
 
 export async function fetchNews(
